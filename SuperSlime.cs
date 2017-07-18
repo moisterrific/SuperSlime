@@ -1,0 +1,52 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+using Terraria;
+using TerrariaApi.Server;
+using TShockAPI;
+
+namespace SuperSlime {
+    [ApiVersion(2, 1)]
+    public class SuperSlime : TerrariaPlugin {
+        public override string Name => "SuperSlime";
+        public override string Author => "Johuan";
+        public override string Description => "Spawn a custom slime!";
+        public override Version Version => Assembly.GetExecutingAssembly().GetName().Version;
+
+        public NPC kingSlime;
+
+        public SuperSlime(Main game) : base(game) {
+        }
+
+        public override void Initialize() {
+            ServerApi.Hooks.GameInitialize.Register(this, OnInitialize);
+        }
+
+        protected override void Dispose(bool disposing) {
+            if (disposing) {
+                ServerApi.Hooks.GameInitialize.Register(this, OnInitialize);
+            }
+            base.Dispose(disposing);
+        }
+
+        private void OnInitialize(EventArgs args) {
+            Commands.ChatCommands.Add(new Command("superslime", Superslime, "superslime") { HelpText = "Usage: /superslime <hp>" });
+        }
+
+        private void Superslime(CommandArgs args) {
+            var npc = new NPC();
+            int hp;
+
+            if (Int32.TryParse(args.Parameters[0], out hp) && args.Parameters[0] != null) {
+                int npcid = NPC.NewNPC((int)args.Player.X, (int)args.Player.Y, 50);
+                Main.npc[npcid].SetDefaults(50);
+                Main.npc[npcid].life = hp;
+            } else {
+                args.Player.SendErrorMessage("Incorrect syntax. Type /superslime <hp>");
+            }
+        }
+    }
+}
