@@ -16,8 +16,6 @@ namespace SuperSlime {
         public override string Description => "Spawn a custom slime!";
         public override Version Version => Assembly.GetExecutingAssembly().GetName().Version;
 
-        public NPC kingSlime;
-
         public SuperSlime(Main game) : base(game) {
         }
 
@@ -37,10 +35,9 @@ namespace SuperSlime {
         }
 
         private void Superslime(CommandArgs args) {
-            var npc = new NPC();
             int hp;
 
-            if (Int32.TryParse(args.Parameters[0], out hp) && args.Parameters[0] != null) {
+            if (args.Parameters.Count == 1 && Int32.TryParse(args.Parameters[0], out hp)) {
                 int npcid = NPC.NewNPC((int)args.Player.X, (int)args.Player.Y, 50);
                 Main.npc[npcid].SetDefaults(50);
                 Main.npc[npcid].life = hp;
