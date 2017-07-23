@@ -25,7 +25,7 @@ namespace SuperSlime {
 
         protected override void Dispose(bool disposing) {
             if (disposing) {
-                ServerApi.Hooks.GameInitialize.Register(this, OnInitialize);
+                ServerApi.Hooks.GameInitialize.Deregister(this, OnInitialize);
             }
             base.Dispose(disposing);
         }
